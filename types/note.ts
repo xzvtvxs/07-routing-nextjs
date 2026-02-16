@@ -11,7 +11,7 @@ export const TAGS = [
 export type Tags = (typeof TAGS)[number];
 
 export interface Note {
-  id: string;
+  id: number;
   title: string;
   content: string;
   tag: Tags;

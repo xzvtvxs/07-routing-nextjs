@@ -10,7 +10,7 @@ import Modal from "@/components/Modal/Modal";
 import { updateNote, fetchNoteById } from "@/lib/api";
 import type { Note } from "@/types/note";
 
-export default function NotePreview({ id }: { id: string }) {
+export default function NotePreview({ id }: { id: number }) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -32,7 +32,7 @@ export default function NotePreview({ id }: { id: string }) {
 
   const mutation = useMutation({
     mutationFn: (data: {
-      id: string;
+      id: number;
       title: string;
       content: string;
       tag: string;

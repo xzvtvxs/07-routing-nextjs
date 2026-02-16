@@ -10,7 +10,12 @@ export default async function NoteDetailsPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await params;
+  const resolvedParams = await params;
+  const noteId = parseInt(resolvedParams.id, 10);
+
+  if (isNaN(noteId)) {
+    return <p>Invalid note ID</p>;
+  }
 
   // Передзагрузка фонового списку нотаток (наприклад, All notes, page 1)
   const defaultTag = undefined;

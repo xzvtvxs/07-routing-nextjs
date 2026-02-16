@@ -12,7 +12,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { PaginatedNotes } from "@/lib/api";
 import type { Note } from "@/types/note";
 
-export default function NotePreview({ id }: { id: string }) {
+export default function NotePreview({ id }: { id: number }) {
   const router = useRouter();
   const { data: note } = useQuery<Note, Error>({
     queryKey: ["note", id],
@@ -29,7 +29,7 @@ export default function NotePreview({ id }: { id: string }) {
 
   const mutation = useMutation({
     mutationFn: (note: {
-      id: string;
+      id: number;
       title: string;
       content: string;
       tag: string;

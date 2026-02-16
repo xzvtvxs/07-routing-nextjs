@@ -41,7 +41,7 @@ export default function NoteForm({ note, onClose }: NoteFormProps) {
 
   const mutation = useMutation({
     mutationFn: (values: {
-      id?: string;
+      id?: number;
       title: string;
       content: string;
       tag: Tags;

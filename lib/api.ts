@@ -31,7 +31,7 @@ export interface CreateNoteParams {
 }
 
 export interface UpdateNoteParams extends CreateNoteParams {
-  id: string;
+  id: number;
 }
 
 const API_URL = "https://notehub-public.goit.study/api/notes";
@@ -112,7 +112,7 @@ export async function updateNote(data: UpdateNoteParams): Promise<Note> {
   }
 }
 
-export async function deleteNote(id: string): Promise<Note> {
+export async function deleteNote(id: number): Promise<Note> {
   try {
     const response: AxiosResponse<Note> = await api.delete(`/${id}`);
     return response.data;
@@ -123,7 +123,7 @@ export async function deleteNote(id: string): Promise<Note> {
   }
 }
 
-export async function fetchNoteById(id: string): Promise<Note> {
+export async function fetchNoteById(id: number): Promise<Note> {
   try {
     const response: AxiosResponse<Note> = await api.get(`/${id}`);
     return response.data;
