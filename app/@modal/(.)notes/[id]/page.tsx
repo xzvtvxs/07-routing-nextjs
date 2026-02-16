@@ -15,7 +15,7 @@ export default async function NoteDetailsPageModal({
 }) {
   const queryClient = new QueryClient();
   const resolvedParams = await params;
-  const id = parseInt(resolvedParams.id);
+  const id = resolvedParams.id;
 
   await queryClient.prefetchQuery({
     queryKey: ["note", resolvedParams.id],

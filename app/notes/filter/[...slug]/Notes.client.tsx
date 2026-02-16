@@ -27,7 +27,7 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
   const [localSearchQuery, setLocalSearchQuery] = useState("");
   const [debouncedQuery] = useDebounce(localSearchQuery, 500);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);
+  const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
   const [currentTag, setCurrentTag] = useState<Tags | undefined>(tag);
 
   const pathname = usePathname();
@@ -57,12 +57,8 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
 
   // Обробка ID з URL для модального вікна
   useEffect(() => {
-    const idFromPath = parseInt(pathname.split("/").pop() || "0", 10);
-    if (
-      !isNaN(idFromPath) &&
-      pathname.startsWith("/notes/") &&
-      !pathname.includes("/@modal/")
-    ) {
+    const idFromPath = pathname.split("/").pop() ?? "";
+    if (idFromPath && pathname.startsWith("/notes/") && !pathname.includes("/@modal/")) {
       setSelectedNoteId(idFromPath);
     } else if (pathname.startsWith("/notes/filter/")) {
       setSelectedNoteId(null);
