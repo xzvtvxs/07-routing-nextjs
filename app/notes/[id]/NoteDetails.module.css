@@ -1,0 +1,154 @@
+.container {
+  max-width: 800px;
+  margin: 32px auto;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 28px;
+  color: #333;
+}
+
+.content {
+  font-size: 18px;
+  line-height: 26px;
+  color: #444;
+  white-space: pre-wrap;
+}
+
+.date {
+  font-size: 14px;
+  color: #888;
+  text-align: right;
+}
+
+.tag {
+  display: inline-block;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: #0d6efd;
+  background-color: #e7f1ff;
+  border: 1px solid #b6d4fe;
+  border-radius: 12px;
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* .backBtn {
+  align-self: flex-start;
+  padding: 6px 12px;
+  font-size: 14px;
+  color: #000000;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: underline;
+  display: inline-block;
+  background-color: transparent;
+} */
+
+/* edit  */
+.closeBtn,
+.editBtn {
+  padding: 8px 16px;
+  background-color: cornflowerblue;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  min-width: 120px;
+}
+
+.editBtn:hover {
+  background-color: rgb(80, 119, 189);
+}
+.closeBtn {
+  background-color: #888;
+}
+.closeBtn:hover {
+  background-color: #666;
+}
+.formGroup {
+  margin-bottom: 15px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.actions {
+  margin-top: 15px;
+}
+
+.cancelBtn,
+.saveBtn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cancelBtn {
+  background-color: #f0f0f0;
+  margin-right: 10px;
+}
+
+.cancelBtn:hover {
+  background-color: #d0d0d0;
+}
+
+.saveBtn {
+  color: #fff;
+  background-color: cornflowerblue;
+}
+
+.saveBtn:hover {
+  background-color: rgb(80, 119, 189);
+}
+
+.saveBtn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
