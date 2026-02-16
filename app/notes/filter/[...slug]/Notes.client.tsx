@@ -1,52 +1,38 @@
-// app/notes/filter/[...slug]/Notes.client.tsx
-
 "use client";
 
 import css from "./NotesPage.module.css";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { useDebounce } from "use-debounce";
-import { usePathname } from "next/navigation";
 import SearchBox from "@/components/SearchBox/SearchBox";
 import NoteList from "@/components/NoteList/NoteList";
 import Pagination from "@/components/Pagination/Pagination";
 import Modal from "@/components/Modal/Modal";
 import NoteForm from "@/components/NoteForm/NoteForm";
-import NotePreviewClient from "@/app/notes/[id]/NoteDetails.client";
 import { fetchNotes } from "@/lib/api";
 import type { FetchNotesResponse } from "@/lib/api";
 import type { Tags } from "@/types/note";
 
 interface NotesClientProps {
-  initialData: FetchNotesResponse;
   tag: Tags | undefined;
 }
 
-export default function NotesClient({ initialData, tag }: NotesClientProps) {
-  const [currentPage, setCurrentPage] = useState(initialData.page || 1);
+export default function NotesClient({ tag }: NotesClientProps) {
+  const [currentPage, setCurrentPage] = useState(1);
   const [localSearchQuery, setLocalSearchQuery] = useState("");
   const [debouncedQuery] = useDebounce(localSearchQuery, 500);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);
-  const [currentTag, setCurrentTag] = useState<Tags | undefined>(tag);
-
-  const pathname = usePathname();
-  const apiTag = currentTag;
 
   const { data, error, isLoading } = useQuery<FetchNotesResponse, Error>({
-    queryKey: ["notes", currentPage, debouncedQuery, apiTag],
+    queryKey: ["notes", currentPage, debouncedQuery, tag],
     queryFn: () =>
       fetchNotes({
         page: currentPage,
         query: debouncedQuery,
         perPage: 12,
-        tag: apiTag,
+        tag,
       }),
     placeholderData: keepPreviousData,
-    initialData:
-      currentPage === 1 && debouncedQuery === "" && apiTag === initialData.tag
-        ? initialData
-        : undefined, // Використовуємо initialData лише для початкового стану
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
   });
@@ -54,20 +40,6 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
   if (error) {
     throw error;
   }
-
-  // Обробка ID з URL для модального вікна
-  useEffect(() => {
-    const idFromPath = parseInt(pathname.split("/").pop() || "0", 10);
-    if (
-      !isNaN(idFromPath) &&
-      pathname.startsWith("/notes/") &&
-      !pathname.includes("/@modal/")
-    ) {
-      setSelectedNoteId(idFromPath);
-    } else if (pathname.startsWith("/notes/filter/")) {
-      setSelectedNoteId(null);
-    }
-  }, [pathname]);
 
   const handlePageChange = useCallback((selectedItem: { selected: number }) => {
     setCurrentPage(selectedItem.selected + 1);
@@ -79,14 +51,9 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
       if (lowerCaseValue !== localSearchQuery) {
         setCurrentPage(1);
         setLocalSearchQuery(lowerCaseValue);
-        if (lowerCaseValue) {
-          setCurrentTag(undefined); // Скидання тега при введенні запиту
-        } else {
-          setCurrentTag(tag); // Повернення до початкового тегу при очищенні
-        }
       }
     },
-    [localSearchQuery, tag],
+    [localSearchQuery],
   );
 
   const handleCloseCreateModal = useCallback(() => {
@@ -118,16 +85,11 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
       ) : (
         <p>Nothing found</p>
       )}
-      {isCreateModalOpen && !selectedNoteId && (
+      {isCreateModalOpen && (
         <Modal onClose={handleCloseCreateModal}>
           <NoteForm onClose={handleCloseCreateModal} />
         </Modal>
       )}
-      {selectedNoteId &&
-        !isCreateModalOpen &&
-        !pathname.includes("/@modal/") && (
-          <NotePreviewClient id={selectedNoteId} />
-        )}
     </div>
   );
 }

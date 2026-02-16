@@ -1,9 +1,11 @@
-// app/notes/filter/[...slug]/page.tsx
-
-import NotesClient from "./Notes.client";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import { fetchNotes } from "@/lib/api";
-import type { FetchNotesResponse } from "@/lib/api";
 import { TAGS, Tags } from "@/types/note";
+import NotesClient from "./Notes.client";
 
 interface NotesSlugProps {
   params: Promise<{ slug: string[] }>;
@@ -11,27 +13,33 @@ interface NotesSlugProps {
 
 export default async function NotesSlugPage({ params }: NotesSlugProps) {
   const { slug } = await params;
-  // slug завжди масив у Next.js
+  const queryClient = new QueryClient();
 
   let tag: Tags | undefined = undefined;
-  const searchQuery: string = "";
   const currentSlug = slug[0];
 
   if (currentSlug) {
     if (TAGS.includes(currentSlug as Tags)) {
-      tag = currentSlug as Tags; // Точна відповідність тегу з великої літери
+      tag = currentSlug as Tags;
     } else if (currentSlug === "All") {
-      tag = undefined; // якщо сегмент "All" -> tag = undefined
+      tag = undefined;
     }
   }
 
-  const pageNumber = 1;
-  const initialData: FetchNotesResponse = await fetchNotes({
-    page: pageNumber,
-    query: searchQuery,
-    perPage: 12,
-    tag,
+  await queryClient.prefetchQuery({
+    queryKey: ["notes", 1, "", tag],
+    queryFn: () =>
+      fetchNotes({
+        page: 1,
+        query: "",
+        perPage: 12,
+        tag,
+      }),
   });
 
-  return <NotesClient initialData={initialData} tag={tag} />;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <NotesClient tag={tag} />
+    </HydrationBoundary>
+  );
 }

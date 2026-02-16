@@ -11,7 +11,7 @@ interface NoteListProps {
   notes: Note[];
   // tag?: string;
   // page: number;
-  // onViewDetails: (id: number, tag?: string, page?: number) => void;
+  // onViewDetails: (id: string, tag?: string, page?: number) => void;
 }
 
 export default function NoteList({ notes }: NoteListProps) {
@@ -25,11 +25,11 @@ export default function NoteList({ notes }: NoteListProps) {
     },
   });
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     deleteMutation.mutate(id);
   };
 
-  const handleViewDetails = (id: number) => {
+  const handleViewDetails = (id: string) => {
     router.push(`/notes/${id}`);
   };
 

@@ -13,11 +13,7 @@ export interface FetchNotesParams {
 
 export interface FetchNotesResponse {
   notes: Note[];
-  total: number;
-  page: number;
-  perPage: number;
   totalPages: number;
-  tag?: string;
 }
 
 export type PaginatedNotes = {
@@ -30,9 +26,9 @@ export interface CreateNoteParams {
   tag: string;
 }
 
-export interface UpdateNoteParams extends CreateNoteParams {
-  id: number;
-}
+export type UpdateNoteParams = {
+  id: string;
+} & Partial<CreateNoteParams>;
 
 const API_URL = "https://notehub-public.goit.study/api/notes";
 
@@ -93,13 +89,10 @@ export async function createNote(data: CreateNoteParams): Promise<Note> {
 
 export async function updateNote(data: UpdateNoteParams): Promise<Note> {
   try {
+    const { id, ...patchData } = data;
     const response: AxiosResponse<Note> = await api.patch(
-      `/${data.id}`,
-      {
-        title: data.title,
-        content: data.content,
-        tag: data.tag,
-      },
+      `/${id}`,
+      patchData,
       {
         headers: { "Content-Type": "application/json" },
       },
@@ -112,7 +105,7 @@ export async function updateNote(data: UpdateNoteParams): Promise<Note> {
   }
 }
 
-export async function deleteNote(id: number): Promise<Note> {
+export async function deleteNote(id: string): Promise<Note> {
   try {
     const response: AxiosResponse<Note> = await api.delete(`/${id}`);
     return response.data;
@@ -123,7 +116,7 @@ export async function deleteNote(id: number): Promise<Note> {
   }
 }
 
-export async function fetchNoteById(id: number): Promise<Note> {
+export async function fetchNoteById(id: string): Promise<Note> {
   try {
     const response: AxiosResponse<Note> = await api.get(`/${id}`);
     return response.data;
